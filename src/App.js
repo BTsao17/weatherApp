@@ -46,13 +46,41 @@ function App() {
             return (
               <div key={i}>
                 <h3>Richmond, BC hardcoded for now</h3>
-                <p>{currentTime}</p>
-                <p>Day Temp: {daily[0].temp.day}&deg;C</p>
-                <p>Night Temp: {daily[0].temp.night}&deg;C</p>
-                <p> Current Temp: {current.temp}&deg;C</p>
-                <p> Feels Like: {current.feels_like}&deg;C</p>
-                <img src={`http://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`} alt='current weather image' />
-                <p> Weather Description: {current.weather[0].description}</p>
+                <div>
+                  <p>{currentTime} aka Today</p>
+                  <p>Day Temp: {Math.round(daily[0].temp.day)}&deg;C</p>
+                  <p>Night Temp: {Math.round(daily[0].temp.night)}&deg;C</p>
+                  <p>Current Temp: {Math.round(current.temp)}&deg;C</p>
+                  <p>Feels Like: {Math.round(current.feels_like)}&deg;C</p>
+                  <img
+                    src={`http://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`}
+                    alt='current weather'
+                  />
+                  <p> Weather Description: {current.weather[0].description}</p>
+                </div>
+                <div>
+                  {/* for weekly forecast */}
+                  <h4>7 days</h4>
+                  <div>
+                    {daily.map((day, i) => {
+                      const { temp, weather } = day;
+                      const dateOfForecast = convertDate(day.dt, { weekday: 'short', month: 'short', day: 'numeric' });
+                      return (
+                        <div key={i}>
+                          <p>{dateOfForecast}</p>
+                          <img
+                            src={`http://openweathermap.org/img/wn/${weather[0].icon}@2x.png`}
+                            alt='current weather'
+                          />
+                          <div>
+                            <p>{Math.round(temp.max)}&deg;C</p>
+                            <p>{Math.round(temp.min)}&deg;C</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             );
           })}
