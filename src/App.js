@@ -14,10 +14,10 @@ function App() {
       )
         .then((response) => response.json())
         .then((data) => {
-          setForecast([data]);
+          setForecast([ data ]);
         });
     },
-    [ location ] //only re-run this effect if location changes
+    [ location ] //only re-run this effect if location changes. If not explicitly stated, will loop as setting state causes rendering.
   );
 
   console.log(forecast);
@@ -30,11 +30,32 @@ function App() {
           <p>search bar</p>
         </section>
         <section>
-          <h3>Richmond, BC</h3>
-          <section>
-            <p>Currently:</p>
-          </section>
-          <p>days of week</p>
+          {/* Current Forecast - Will become own functional component later*/}
+          {forecast.map((place, i) => {
+            function convertDate(date, options) {
+              return new Date(date * 1000).toLocaleString('en-US', options);
+            }
+
+            const { current, daily } = place;
+            const currentTime = convertDate(current.dt, {
+              month: 'long',
+              day: 'numeric',
+              hour: 'numeric',
+              minute: 'numeric',
+            });
+            return (
+              <div key={i}>
+                <h3>Richmond, BC hardcoded for now</h3>
+                <p>{currentTime}</p>
+                <p>Day Temp: {daily[0].temp.day}&deg;C</p>
+                <p>Night Temp: {daily[0].temp.night}&deg;C</p>
+                <p> Current Temp: {current.temp}&deg;C</p>
+                <p> Feels Like: {current.feels_like}&deg;C</p>
+                <img src={`http://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`} alt='current weather image' />
+                <p> Weather Description: {current.weather[0].description}</p>
+              </div>
+            );
+          })}
         </section>
       </main>
     </div>
