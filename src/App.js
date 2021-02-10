@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import { weather_KEY } from './keys';
 
+function convertDate(date, options) {
+  return new Date(date * 1000).toLocaleString('en-US', options);
+}
+
 function App() {
   const [ location, setLocation ] = useState({ lat: '49.163168', lon: '123.13741' });
   const [ forecast, setForecast ] = useState([]);
@@ -30,62 +34,69 @@ function App() {
           <p>search bar</p>
         </section>
         <section>
-          {/* Current Forecast - Will become own functional component later*/}
-          {forecast.map((place, i) => {
-            function convertDate(date, options) {
-              return new Date(date * 1000).toLocaleString('en-US', options);
-            }
-
-            const { current, daily } = place;
-            const currentTime = convertDate(current.dt, {
-              month: 'long',
-              day: 'numeric',
-              hour: 'numeric',
-              minute: 'numeric',
-            });
+          {forecast.map((info, i) => {
+            const { daily, current } = info;
             return (
-              <div key={i}>
-                <h3>Richmond, BC hardcoded for now</h3>
-                <div>
-                  <p>{currentTime} aka Today</p>
-                  <p>Day Temp: {Math.round(daily[0].temp.day)}&deg;C</p>
-                  <p>Night Temp: {Math.round(daily[0].temp.night)}&deg;C</p>
-                  <p>Current Temp: {Math.round(current.temp)}&deg;C</p>
-                  <p>Feels Like: {Math.round(current.feels_like)}&deg;C</p>
-                  <img
-                    src={`http://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`}
-                    alt='current weather'
-                  />
-                  <p> Weather Description: {current.weather[0].description}</p>
-                </div>
-                <div>
-                  {/* for weekly forecast */}
-                  <h4>7 days</h4>
-                  <div>
-                    {daily.map((day, i) => {
-                      const { temp, weather } = day;
-                      const dateOfForecast = convertDate(day.dt, { weekday: 'short', month: 'short', day: 'numeric' });
-                      return (
-                        <div key={i}>
-                          <p>{dateOfForecast}</p>
-                          <img
-                            src={`http://openweathermap.org/img/wn/${weather[0].icon}@2x.png`}
-                            alt='current weather'
-                          />
-                          <div>
-                            <p>{Math.round(temp.max)}&deg;C</p>
-                            <p>{Math.round(temp.min)}&deg;C</p>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
+              <Card key={i}>
+                <Location />
+                <CurrentForecast today={daily[0]} current={current} />
+                <WeekForecast daily={daily} />
+              </Card>
             );
           })}
         </section>
       </main>
+    </div>
+  );
+}
+
+function Card({ children }) {
+  return <div>{children}</div>;
+}
+
+function Location() {
+  return <h3>Richmond, BC - hardcoded for now</h3>;
+}
+
+function CurrentForecast({ today, current }) {
+  const currentTime = convertDate(current.dt, {
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  });
+  return (
+    <div>
+      <p>{currentTime} aka Today</p>
+      <p>Day Temp: {Math.round(today.temp.day)}&deg;C</p>
+      <p>Night Temp: {Math.round(today.temp.night)}&deg;C</p>
+      <p>Current Temp: {Math.round(current.temp)}&deg;C</p>
+      <p>Feels Like: {Math.round(current.feels_like)}&deg;C</p>
+      <img src={`http://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`} alt='current weather' />
+      <p> Weather Description: {current.weather[0].description}</p>
+      <p>Show Hourly Forecast - Button</p>
+    </div>
+  );
+}
+
+function WeekForecast({ daily }) {
+  return (
+    <div>
+      <h4>7 days</h4>
+      {daily.map((day, i) => {
+        const { temp, weather } = day;
+        const dateOfForecast = convertDate(day.dt, { weekday: 'short', month: 'short', day: 'numeric' });
+        return (
+          <div key={i}>
+            <p>{dateOfForecast}</p>
+            <img src={`http://openweathermap.org/img/wn/${weather[0].icon}@2x.png`} alt='current weather' />
+            <div>
+              <p>{Math.round(temp.max)}&deg;C</p>
+              <p>{Math.round(temp.min)}&deg;C</p>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
