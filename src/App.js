@@ -51,11 +51,11 @@ function App() {
 }
 
 function Card({ children }) {
-  return <div>{children}</div>;
+  return <div className='card'>{children}</div>;
 }
 
 function Location() {
-  return <h3>Richmond, BC - hardcoded for now</h3>;
+  return <h3 className='location'>Richmond, BC - hardcoded for now</h3>;
 }
 
 function CurrentForecast({ today, current }) {
@@ -66,14 +66,24 @@ function CurrentForecast({ today, current }) {
     minute: 'numeric',
   });
   return (
-    <div>
-      <p>{currentTime} aka Today</p>
-      <p>Day Temp: {Math.round(today.temp.day)}&deg;C</p>
-      <p>Night Temp: {Math.round(today.temp.night)}&deg;C</p>
-      <p>Current Temp: {Math.round(current.temp)}&deg;C</p>
-      <p>Feels Like: {Math.round(current.feels_like)}&deg;C</p>
-      <img src={`http://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`} alt='current weather' />
-      <p> Weather Description: {current.weather[0].description}</p>
+    <div className='currentContainer'>
+      <p className='currentTime'>{currentTime} aka Today</p>
+      <section className='temperatureContainer'>
+        <div className='dayNightTemp'>
+          <p>Day {Math.round(today.temp.day)}&deg;</p>
+          <p>Night {Math.round(today.temp.night)}&deg;</p>
+        </div>
+        <p className='currentTemp'>{Math.round(current.temp)}&deg;C</p>
+        <p className='feelsLike'>Feels like {Math.round(current.feels_like)}&deg;</p>
+      </section>
+      <figure className='weatherContainer'>
+        <img
+          src={`http://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`}
+          alt='current weather'
+          className='weatherImg'
+        />
+        <figcaption className='weatherImgCaption'>{current.weather[0].description}</figcaption>
+      </figure>
       <p>Show Hourly Forecast - Button</p>
     </div>
   );
@@ -81,7 +91,7 @@ function CurrentForecast({ today, current }) {
 
 function WeekForecast({ daily }) {
   return (
-    <div>
+    <div className='weekContainer'>
       <h4>7 days</h4>
       {daily.map((day, i) => {
         const { temp, weather } = day;
