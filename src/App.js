@@ -8,21 +8,155 @@ function convertDate(date, options) {
 
 function App() {
   const [ location, setLocation ] = useState({ lat: '49.163168', lon: '123.13741' });
-  const [ forecast, setForecast ] = useState([]);
-
-  useEffect(
-    () => {
-      const { lat, lon } = location;
-      fetch(
-        `http://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=-${lon}&units=metric&exclude=minutely,hourly,alerts&APPID=${weather_KEY}`
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          setForecast([ data ]);
-        });
+  const [ forecast, setForecast ] = useState([
+    {
+      lat: 49.1632,
+      lon: -123.1374,
+      timezone: 'America/Vancouver',
+      timezone_offset: -28800,
+      current: {
+        dt: 1613179276,
+        feels_like: -5.85,
+        temp: -0.81,
+        weather: [
+          {
+            Id: 804,
+            icon: '04d',
+            description: 'overcast clouds',
+            main: 'clouds',
+          },
+        ],
+      },
+      daily: [
+        {
+          dt: 1613160000,
+          temp: {
+            min: -6.55,
+            max: -0.81,
+          },
+          weather: [
+            {
+              id: 804,
+              icon: '04d',
+              description: 'overcast clouds',
+            },
+          ],
+        },
+        {
+          dt: 1613160000,
+          temp: {
+            min: -6.55,
+            max: -0.81,
+          },
+          weather: [
+            {
+              id: 804,
+              icon: '04d',
+              description: 'overcast clouds',
+            },
+          ],
+        },
+        {
+          dt: 1613160000,
+          temp: {
+            min: -6.55,
+            max: -0.81,
+          },
+          weather: [
+            {
+              id: 804,
+              icon: '04d',
+              description: 'overcast clouds',
+            },
+          ],
+        },
+        {
+          dt: 1613160000,
+          temp: {
+            min: -6.55,
+            max: -0.81,
+          },
+          weather: [
+            {
+              id: 804,
+              icon: '04d',
+              description: 'overcast clouds',
+            },
+          ],
+        },
+        {
+          dt: 1613160000,
+          temp: {
+            min: -6.55,
+            max: -0.81,
+          },
+          weather: [
+            {
+              id: 804,
+              icon: '04d',
+              description: 'overcast clouds',
+            },
+          ],
+        },
+        {
+          dt: 1613160000,
+          temp: {
+            min: -6.55,
+            max: -0.81,
+          },
+          weather: [
+            {
+              id: 804,
+              icon: '04d',
+              description: 'overcast clouds',
+            },
+          ],
+        },
+        {
+          dt: 1613160000,
+          temp: {
+            min: -6.55,
+            max: -0.81,
+          },
+          weather: [
+            {
+              id: 804,
+              icon: '04d',
+              description: 'overcast clouds',
+            },
+          ],
+        },
+        {
+          dt: 1613160000,
+          temp: {
+            min: -6.55,
+            max: -0.81,
+          },
+          weather: [
+            {
+              id: 804,
+              icon: '04d',
+              description: 'overcast clouds',
+            },
+          ],
+        },
+      ],
     },
-    [ location ] //only re-run this effect if location changes. If not explicitly stated, will loop as setting state causes rendering.
-  );
+  ]);
+
+  // useEffect(
+  //   () => {
+  //     const { lat, lon } = location;
+  //     fetch(
+  //       `http://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=-${lon}&units=metric&exclude=minutely,hourly,alerts&APPID=${weather_KEY}`
+  //     )
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         setForecast([ data ]);
+  //       });
+  //   },
+  //   [ location ] //only re-run this effect if location changes. If not explicitly stated, will loop as setting state causes rendering.
+  // );
 
   console.log(forecast);
 
@@ -93,20 +227,22 @@ function WeekForecast({ daily }) {
   return (
     <div className='weekContainer'>
       <h4>7 days</h4>
-      {daily.map((day, i) => {
-        const { temp, weather } = day;
-        const dateOfForecast = convertDate(day.dt, { weekday: 'short', month: 'short', day: 'numeric' });
-        return (
-          <div key={i}>
-            <p>{dateOfForecast}</p>
-            <img src={`http://openweathermap.org/img/wn/${weather[0].icon}@2x.png`} alt='current weather' />
-            <div>
-              <p>{Math.round(temp.max)}&deg;C</p>
-              <p>{Math.round(temp.min)}&deg;C</p>
-            </div>
-          </div>
-        );
-      })}
+      <ul className='weekList'>
+        {daily.map((day, i) => {
+          const { temp, weather } = day;
+          const dateOfForecast = convertDate(day.dt, { weekday: 'short', month: 'short', day: 'numeric' });
+          return (
+            <li key={i}>
+              <p>{dateOfForecast}</p>
+              <img src={`http://openweathermap.org/img/wn/${weather[0].icon}@2x.png`} alt='current weather' />
+              <div>
+                <p>{Math.round(temp.max)}&deg;C</p>
+                <p>{Math.round(temp.min)}&deg;C</p>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }

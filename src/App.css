@@ -117,3 +117,13 @@ p {
     font-size: 2.074rem;
   }
 }
+
+.weekList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.weekList div {
+  display: flex;
+  justify-content: space-around;
+}

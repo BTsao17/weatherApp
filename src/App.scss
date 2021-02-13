@@ -71,3 +71,13 @@ p {
   @include font-size($p-font-sizes);
   margin: 1.953rem 0;
 }
+
+//WeeklyForecast
+.weekList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+.weekList div {
+  display: flex;
+  justify-content: space-around;
+}
